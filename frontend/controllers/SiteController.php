@@ -26,7 +26,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup', 'office', 'forgest', 'special-callback'],
+                'only' => ['logout', 'signup', 'office', 'forgest', 'special-callback', 'new-callback'],
                 'rules' => [
                     [
                         'actions' => ['signup', 'forgest'],
@@ -45,6 +45,13 @@ class SiteController extends Controller
                             return date('d-m') === '10-01';
                         }
                     ],
+                    [
+                        'actions' => ['new-callback'],
+                        'allow' => true,
+                        'denyCallback' => function ($rule, $action) {
+                            $this->redirect('new-callback');
+                        }
+                    ]
                 ],
             ],
             'verbs' => [
@@ -109,7 +116,17 @@ class SiteController extends Controller
      */
     public function actionSpecialCallback()
     {
-        return $this->render('you');
+        return $this->render('matchcallback');
+    }
+
+    /**
+     * aciton
+     *
+     * @return string
+     */
+    public function actionDenyCallback()
+    {
+        return $this->render('new-callback');
     }
 
     /**
