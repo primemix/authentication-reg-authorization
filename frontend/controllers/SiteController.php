@@ -26,18 +26,32 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup', 'office', 'forgest', 'special-callback', 'new-callback'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup', 'forgest'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','office'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['special-callback'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return date('d-m') === '10-01';
+                        }
+                    ],
+                    [
+                        'actions' => ['new-callback'],
+                        'allow' => true,
+                        'denyCallback' => function ($rule, $action) {
+                            $this->redirect('new-callback');
+                        }
+                    ]
                 ],
             ],
             'verbs' => [
@@ -73,6 +87,46 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    /**
+     * Office for logged user
+     *
+     * @return mixed
+     */
+    public function actionOffice()
+    {
+        return $this->render('office');
+    }
+
+    /**
+     *Only for gest user
+     *
+     * @return mixed
+     */
+    public function actionForgest()
+    {
+        return $this->render('forgest');
+    }
+
+    /**
+     * matchCallback
+     *
+     * @return string
+     */
+    public function actionSpecialCallback()
+    {
+        return $this->render('matchcallback');
+    }
+
+    /**
+     * aciton
+     *
+     * @return string
+     */
+    public function actionDenyCallback()
+    {
+        return $this->render('new-callback');
     }
 
     /**
